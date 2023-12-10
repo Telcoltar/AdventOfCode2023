@@ -2,3 +2,4 @@ input*
 target
 env
 node_modules
+*.js
