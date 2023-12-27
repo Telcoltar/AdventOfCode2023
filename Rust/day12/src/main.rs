@@ -45,16 +45,16 @@ impl Process {
                 if block_index < self.blocks.len() && self.check_if_block_fits(self.blocks[block_index], index) {
                     damaged_sum = self.wrap_process_condition(index + self.blocks[block_index] + 1, block_index + 1);
                 }
-                return non_damaged_sum + damaged_sum;
+                non_damaged_sum + damaged_sum
             }
             Condition::Operational => {
-                return self.wrap_process_condition(index + 1, block_index);
+                self.wrap_process_condition(index + 1, block_index)
             }
             Condition::Damaged => {
                 if block_index < self.blocks.len() && self.check_if_block_fits(self.blocks[block_index], index) {
                     return self.wrap_process_condition(index + self.blocks[block_index] + 1, block_index + 1);
                 }
-                return 0;
+                0
             }
         }
     }
@@ -109,7 +109,7 @@ fn solution(factor: usize) {
     let mut sum: i64 = 0;
     let mut cache_hits: i64 = 0;
     let mut invocations: i64 = 0;
-    for (conditions, values) in data[5..].iter().cloned() {
+    for (conditions, values) in data {
         let (conditions, values) = multiply_data(conditions, values, factor);
         let cache = vec![-1; (conditions.len() + GRID_OVERSIZE) * (values.len() + GRID_OVERSIZE)];
         let mut process = Process { conditions, blocks: values, cache, cache_hits: 0, invocations: 0};
@@ -128,7 +128,7 @@ fn solution_part_1() {
 }
 
 fn solution_part_2() {
-    solution(2);
+    solution(5);
 }
 
 fn main() {
