@@ -92,10 +92,10 @@ fn load_data(filename: &str) -> Vec<(Vec<Condition>, Vec<usize>)> {
     }
     result
 }
-fn multiply_data(conditions: Vec<Condition>, values: Vec<usize>) -> (Vec<Condition>, Vec<usize>) {
+fn multiply_data(conditions: Vec<Condition>, values: Vec<usize>, factor: usize) -> (Vec<Condition>, Vec<usize>) {
     let mut result_conditions = conditions.to_vec();
     let mut result_values = values.to_vec();
-    for _i in 0..4 {
+    for _i in 0..(factor - 1) {
         result_conditions.push(Condition::Unknown);
         result_conditions.extend(conditions.to_vec());
         result_values.extend(values.to_vec());
@@ -103,14 +103,14 @@ fn multiply_data(conditions: Vec<Condition>, values: Vec<usize>) -> (Vec<Conditi
     (result_conditions, result_values)
 }
 
-fn solution_part_1() {
+fn solution(factor: usize) {
     let data = load_data("input.txt");
 
     let mut sum: i64 = 0;
     let mut cache_hits: i64 = 0;
     let mut invocations: i64 = 0;
     for (conditions, values) in data[5..].iter().cloned() {
-        let (conditions, values) = multiply_data(conditions, values);
+        let (conditions, values) = multiply_data(conditions, values, factor);
         let cache = vec![-1; (conditions.len() + GRID_OVERSIZE) * (values.len() + GRID_OVERSIZE)];
         let mut process = Process { conditions, blocks: values, cache, cache_hits: 0, invocations: 0};
         sum += process.process_condition(0, 0);
@@ -122,6 +122,16 @@ fn solution_part_1() {
     println!("Invocations: {}", invocations);
 
 }
+
+fn solution_part_1() {
+    solution(1);
+}
+
+fn solution_part_2() {
+    solution(5);
+}
+
 fn main() {
-    solution_part_1()
+    solution_part_1();
+    solution_part_2();
 }
