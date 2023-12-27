@@ -54,9 +54,9 @@ impl Process {
                 if block_index < self.blocks.len() && self.check_if_block_fits(self.blocks[block_index], index) {
                     return self.wrap_process_condition(index + self.blocks[block_index] + 1, block_index + 1);
                 }
+                return 0;
             }
         }
-        0
     }
 
     fn check_if_block_fits(&self, block: usize, index: usize) -> bool {
@@ -128,7 +128,7 @@ fn solution_part_1() {
 }
 
 fn solution_part_2() {
-    solution(5);
+    solution(2);
 }
 
 fn main() {
