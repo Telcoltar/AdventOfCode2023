@@ -11,51 +11,6 @@ class Direction(Enum):
     RIGHT = 4
 
 
-class Point:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-    def shift(self, direction: Direction):
-        if direction == Direction.UP:
-            self.y -= 1
-        elif direction == Direction.DOWN:
-            self.y += 1
-        elif direction == Direction.LEFT:
-            self.x -= 1
-        elif direction == Direction.RIGHT:
-            self.x += 1
-
-    def __repr__(self):
-        return f"Point({self.x}, {self.y})"
-
-    def __str__(self):
-        return f"({self.x}, {self.y})"
-
-    def tuple(self) -> tuple[int, int]:
-        return self.x, self.y
-
-
-
-class Status:
-
-    def __init__(self, point: Point, direction: Direction):
-        self.point = point
-        self.direction = direction
-
-    def move(self):
-        self.point.shift(self.direction)
-
-    def __repr__(self):
-        return f"Status({self.point.x}, {self.point.y}, {self.direction})"
-
-    def __str__(self):
-        return self.__repr__()
-
-    def tuple(self) -> tuple[int, int, int]:
-        return self.point.x, self.point.y, self.direction.value
-
-
 def move_point(point: (int, int), direction: int) -> tuple[int, int, int]:
     if direction == Direction.UP.value:
         return point[0], point[1] - 1, direction
@@ -110,8 +65,8 @@ def process_corner(status: tuple[int, int, int], queue: Deque[tuple[int, int, in
         queue.append((status[0], status[1], new_direction[3].value))
 
 
-def calculate_energized_tiles(grid: list[list[str]], start: Status) -> int:
-    queue: Deque[tuple[int, int, int]] = deque([start.tuple()])
+def calculate_energized_tiles(grid: list[list[str]], start: tuple[int, int, int]) -> int:
+    queue: Deque[tuple[int, int, int]] = deque([start])
     visited: set[tuple[int, int, int]] = set()
     count: set[tuple[int, int]] = set()
     while len(queue) > 0:
@@ -170,7 +125,7 @@ def print_grid(energized_points: set[tuple[int, int]]):
 def solution_part_1():
     grid = load_data('input.txt')
     grid = pad_grid(grid)
-    start = Status(Point(0, 1), Direction.RIGHT)
+    start = (0, 1, Direction.RIGHT.value)
     energized_tiles = calculate_energized_tiles(grid, start)
     print(energized_tiles)
 
@@ -181,16 +136,16 @@ def solution_part_2():
     energized_tiles = []
     for i in range(dim - 2):
         energized_tiles.append(calculate_energized_tiles(
-            grid, Status(Point(0, i + 1), Direction.RIGHT)
+            grid, (0, i + 1, Direction.RIGHT.value)
         ))
         energized_tiles.append(calculate_energized_tiles(
-            grid, Status(Point(dim - 1, i + 1), Direction.LEFT)
+            grid, (dim - 1, i + 1, Direction.LEFT.value)
         ))
         energized_tiles.append(calculate_energized_tiles(
-            grid, Status(Point(i + 1, 0), Direction.DOWN)
+            grid, (i + 1, 0, Direction.DOWN.value)
         ))
         energized_tiles.append(calculate_energized_tiles(
-            grid, Status(Point(i + 1, dim - 1), Direction.UP)
+            grid, (i + 1, dim - 1, Direction.UP.value)
         ))
     print(max(energized_tiles))
 
